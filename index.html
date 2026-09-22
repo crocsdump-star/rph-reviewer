@@ -1,0 +1,1393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>RPH Midterm Reviewer — Weeks 2–4</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#182338;
+    --ink-2:#212f4a;
+    --parchment:#f2ead8;
+    --parchment-2:#e9dfc6;
+    --brass:#c99a3a;
+    --brass-bright:#e0b654;
+    --wax:#9c3b34;
+    --cream-text:#f3efe6;
+    --muted:#a7b0c4;
+    --line:rgba(243,239,230,0.14);
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{
+    margin:0;
+    background:var(--ink);
+    color:var(--cream-text);
+    font-family:'Inter',system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,h4{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    margin:0 0 0.5em 0;
+    line-height:1.15;
+    color:var(--cream-text);
+  }
+  p{line-height:1.65; margin:0 0 1em 0; max-width:68ch;}
+  .app{
+    display:flex;
+    min-height:100vh;
+  }
+
+  /* ---- Sidebar / drawer ---- */
+  .drawer{
+    width:280px;
+    flex:none;
+    background:var(--ink-2);
+    border-right:1px solid var(--line);
+    padding:28px 0 28px 0;
+    position:sticky;
+    top:0;
+    height:100vh;
+    overflow-y:auto;
+  }
+  .drawer-title{
+    padding:0 24px 20px 24px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:8px;
+  }
+  .drawer-title .kicker{
+    font-size:0.72rem;
+    letter-spacing:0.02em;
+    color:var(--brass-bright);
+    font-weight:600;
+    margin-bottom:6px;
+  }
+  .drawer-title h1{
+    font-size:1.25rem;
+    font-weight:700;
+  }
+  .drawer-title .sub{
+    color:var(--muted);
+    font-size:0.85rem;
+    margin-top:6px;
+  }
+  nav{padding:8px 12px;}
+  .navbtn{
+    width:100%;
+    text-align:left;
+    background:none;
+    border:none;
+    color:var(--muted);
+    font-family:'Inter',sans-serif;
+    font-size:0.94rem;
+    padding:11px 12px;
+    border-radius:8px;
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+    cursor:pointer;
+    transition:background 0.15s, color 0.15s;
+  }
+  .navbtn .num{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    color:var(--brass);
+    font-size:0.85rem;
+    flex:none;
+    width:20px;
+  }
+  .navbtn:hover{background:rgba(243,239,230,0.05); color:var(--cream-text);}
+  .navbtn.active{
+    background:rgba(201,154,58,0.14);
+    color:var(--cream-text);
+  }
+  .navbtn.active .num{color:var(--brass-bright);}
+  .progress-wrap{
+    margin:18px 24px 0 24px;
+    padding-top:16px;
+    border-top:1px solid var(--line);
+  }
+  .progress-label{
+    font-size:0.78rem;
+    color:var(--muted);
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:6px;
+  }
+  .progress-bar{
+    height:6px;
+    background:rgba(243,239,230,0.1);
+    border-radius:4px;
+    overflow:hidden;
+  }
+  .progress-fill{
+    height:100%;
+    background:linear-gradient(90deg,var(--brass),var(--brass-bright));
+    width:0%;
+    transition:width 0.4s ease;
+  }
+
+  /* ---- Main content ---- */
+  main{
+    flex:1;
+    min-width:0;
+    padding:56px 64px 100px 64px;
+  }
+  .panel{display:none;}
+  .panel.active{display:block; animation:fadein 0.3s ease;}
+  @keyframes fadein{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
+
+  .eyebrow-row{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    margin-bottom:6px;
+  }
+  .weight-pill{
+    background:var(--brass);
+    color:var(--ink);
+    font-weight:700;
+    font-size:0.78rem;
+    padding:3px 10px;
+    border-radius:100px;
+  }
+  .panel > h2{font-size:2.1rem; max-width:20ch;}
+  .panel > .dek{
+    color:var(--muted);
+    font-size:1.05rem;
+    max-width:60ch;
+    margin-bottom:36px;
+  }
+
+  .block{
+    margin-bottom:34px;
+    padding-bottom:34px;
+    border-bottom:1px solid var(--line);
+  }
+  .block:last-child{border-bottom:none;}
+  .block h3{font-size:1.35rem; color:var(--brass-bright);}
+
+  .keyline{
+    background:var(--parchment);
+    color:var(--ink);
+    border-radius:10px;
+    padding:16px 20px;
+    margin:16px 0;
+    font-family:'Fraunces',serif;
+    font-style:italic;
+    font-size:1.08rem;
+    font-weight:500;
+    max-width:64ch;
+  }
+  .keyline .q{
+    font-style:normal;
+    font-family:'Inter',sans-serif;
+    font-weight:600;
+    font-size:0.75rem;
+    color:var(--wax);
+    display:block;
+    margin-bottom:4px;
+  }
+
+  ul.ex{margin:0 0 1em 0; padding-left:1.2em; max-width:64ch;}
+  ul.ex li{margin-bottom:6px; line-height:1.55;}
+
+  .example-card{
+    background:rgba(243,239,230,0.05);
+    border-left:3px solid var(--brass);
+    border-radius:6px;
+    padding:16px 20px;
+    margin:16px 0;
+    max-width:64ch;
+  }
+  .example-card .tag{
+    font-size:0.72rem;
+    font-weight:700;
+    color:var(--brass-bright);
+    margin-bottom:8px;
+    display:block;
+  }
+
+  .memory-clue{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    background:var(--wax);
+    color:var(--cream-text);
+    padding:8px 16px;
+    border-radius:100px;
+    font-weight:600;
+    font-size:0.88rem;
+    margin-top:6px;
+  }
+
+  table.cmp{
+    width:100%;
+    max-width:70ch;
+    border-collapse:collapse;
+    margin:16px 0;
+    font-size:0.94rem;
+  }
+  table.cmp th{
+    text-align:left;
+    font-family:'Fraunces',serif;
+    color:var(--brass-bright);
+    padding:10px 14px;
+    border-bottom:2px solid var(--brass);
+  }
+  table.cmp td{
+    padding:10px 14px;
+    border-bottom:1px solid var(--line);
+    color:var(--cream-text);
+  }
+  table.cmp tr:last-child td{border-bottom:none;}
+
+  .step-list{counter-reset:step; list-style:none; padding:0; max-width:64ch;}
+  .step-list li{
+    counter-increment:step;
+    position:relative;
+    padding-left:44px;
+    margin-bottom:18px;
+    line-height:1.6;
+  }
+  .step-list li::before{
+    content:counter(step);
+    position:absolute;
+    left:0; top:-2px;
+    width:30px; height:30px;
+    background:var(--ink-2);
+    border:1px solid var(--brass);
+    color:var(--brass-bright);
+    font-family:'Fraunces',serif;
+    font-weight:700;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:0.9rem;
+  }
+
+  .flip-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+    gap:16px;
+    margin:20px 0;
+    max-width:80ch;
+  }
+  .flip-card{
+    perspective:1000px;
+    height:140px;
+    cursor:pointer;
+  }
+  .flip-card.big{height:170px;}
+  .flip-inner{
+    position:relative;
+    width:100%; height:100%;
+    transition:transform 0.5s;
+    transform-style:preserve-3d;
+  }
+  .flip-card.flipped .flip-inner{transform:rotateY(180deg);}
+  .flip-face{
+    position:absolute; inset:0;
+    backface-visibility:hidden;
+    border-radius:10px;
+    padding:16px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+  }
+  .flip-front{
+    background:var(--ink-2);
+    border:1px solid var(--brass);
+  }
+  .flip-front .term{font-family:'Fraunces',serif; font-weight:600; font-size:1.05rem; color:var(--cream-text);}
+  .flip-front .hint{font-size:0.72rem; color:var(--muted); margin-top:8px;}
+  .flip-front .cat{
+    position:absolute;
+    top:10px; left:14px;
+    font-size:0.65rem;
+    font-weight:700;
+    color:var(--brass);
+  }
+  .deck-controls{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    margin-bottom:18px;
+    flex-wrap:wrap;
+  }
+  .filter-chip{
+    background:none;
+    border:1px solid var(--muted);
+    color:var(--muted);
+    padding:7px 14px;
+    border-radius:100px;
+    font-size:0.82rem;
+    cursor:pointer;
+  }
+  .filter-chip.active{
+    background:var(--brass);
+    border-color:var(--brass);
+    color:var(--ink);
+    font-weight:600;
+  }
+  .flip-back{
+    background:var(--brass);
+    color:var(--ink);
+    transform:rotateY(180deg);
+    font-size:0.86rem;
+    line-height:1.4;
+    font-weight:500;
+  }
+
+  .cram-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+    gap:20px;
+    margin-top:20px;
+  }
+  .cram-card{
+    background:var(--parchment);
+    color:var(--ink);
+    border-radius:12px;
+    padding:20px 22px;
+  }
+  .cram-card h4{color:var(--wax); font-size:1rem; margin-bottom:10px;}
+  .cram-card p, .cram-card div{color:var(--ink); max-width:none;}
+  .cram-card .line{margin-bottom:6px; font-size:0.92rem;}
+  .cram-card b{color:var(--ink-2);}
+
+  .final-banner{
+    background:linear-gradient(135deg,var(--ink-2),var(--ink));
+    border:1px solid var(--brass);
+    border-radius:14px;
+    padding:28px 30px;
+    margin-top:24px;
+    max-width:70ch;
+  }
+  .final-banner .aid{
+    font-family:'Fraunces',serif;
+    font-style:italic;
+    font-size:1.2rem;
+    color:var(--brass-bright);
+    margin-top:12px;
+  }
+
+  /* ---- Quiz ---- */
+  .quiz-item{
+    background:rgba(243,239,230,0.04);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:22px 24px;
+    margin-bottom:18px;
+    max-width:72ch;
+  }
+  .quiz-item .qnum{
+    font-family:'Fraunces',serif;
+    color:var(--brass-bright);
+    font-weight:600;
+    font-size:0.85rem;
+    margin-bottom:6px;
+  }
+  .quiz-item .qtext{font-size:1.05rem; font-weight:600; margin-bottom:14px; max-width:60ch;}
+  .opt{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    padding:10px 12px;
+    border-radius:8px;
+    border:1px solid transparent;
+    cursor:pointer;
+    margin-bottom:6px;
+    transition:background 0.15s;
+  }
+  .opt:hover{background:rgba(243,239,230,0.05);}
+  .opt input{margin-top:3px;}
+  .opt.correct{background:rgba(120,181,120,0.15); border-color:#7cb87c;}
+  .opt.incorrect{background:rgba(156,59,52,0.18); border-color:var(--wax);}
+  .feedback{
+    margin-top:10px;
+    font-size:0.9rem;
+    padding:10px 14px;
+    border-radius:8px;
+    display:none;
+  }
+  .feedback.show{display:block;}
+  .feedback.right{background:rgba(120,181,120,0.12); color:#bfe3bf;}
+  .feedback.wrong{background:rgba(156,59,52,0.14); color:#f0c4c0;}
+  .quiz-actions{
+    display:flex;
+    gap:12px;
+    align-items:center;
+    margin-top:24px;
+  }
+  button.primary{
+    background:var(--brass);
+    color:var(--ink);
+    border:none;
+    font-weight:700;
+    font-family:'Inter',sans-serif;
+    padding:12px 24px;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:0.95rem;
+  }
+  button.primary:hover{background:var(--brass-bright);}
+  button.ghost{
+    background:none;
+    border:1px solid var(--muted);
+    color:var(--cream-text);
+    padding:12px 22px;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:0.95rem;
+  }
+  #quiz-score, #quiz-score-2{
+    font-family:'Fraunces',serif;
+    font-size:1.4rem;
+    color:var(--brass-bright);
+  }
+  .live-score-row{
+    display:flex;
+    align-items:baseline;
+    gap:16px;
+    margin-bottom:20px;
+    max-width:72ch;
+  }
+  .live-score{
+    font-family:'Fraunces',serif;
+    font-size:1.15rem;
+    color:var(--brass-bright);
+  }
+  .live-score-sub{
+    font-size:0.85rem;
+    color:var(--muted);
+  }
+  .opt.locked{cursor:default;}
+  .opt.locked:hover{background:none;}
+  .set-tabs{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-bottom:22px;
+  }
+  .set-tab{
+    background:rgba(243,239,230,0.05);
+    border:1px solid var(--line);
+    color:var(--muted);
+    padding:10px 16px;
+    border-radius:100px;
+    font-size:0.85rem;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .set-tab.active{
+    background:var(--brass);
+    border-color:var(--brass);
+    color:var(--ink);
+    font-weight:700;
+  }
+  .set-tab .dot{
+    width:8px; height:8px; border-radius:50%;
+    background:var(--muted);
+    flex:none;
+  }
+  .set-tab.done .dot{background:#7cb87c;}
+  .set-tab.active .dot{background:var(--ink);}
+  #quiz-result-panel{
+    display:none;
+    background:var(--parchment);
+    color:var(--ink);
+    border-radius:14px;
+    padding:26px 28px;
+    margin-bottom:24px;
+    max-width:72ch;
+  }
+  #quiz-result-panel.show{display:block;}
+  #quiz-result-panel h3{color:var(--wax); margin-bottom:8px;}
+
+  /* Overview table */
+  table.cov{
+    width:100%;
+    max-width:70ch;
+    border-collapse:collapse;
+    margin:20px 0 30px 0;
+  }
+  table.cov th{
+    background:var(--ink-2);
+    color:var(--brass-bright);
+    text-align:left;
+    padding:12px 16px;
+    font-family:'Fraunces',serif;
+    font-size:0.92rem;
+    border-bottom:2px solid var(--brass);
+  }
+  table.cov td{
+    padding:12px 16px;
+    border-bottom:1px solid var(--line);
+  }
+  table.cov tr:last-child td{font-weight:700; color:var(--brass-bright);}
+  .stat-row{
+    display:flex;
+    gap:14px;
+    flex-wrap:wrap;
+    margin-bottom:10px;
+  }
+  .stat{
+    background:rgba(243,239,230,0.05);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:14px 18px;
+    min-width:130px;
+  }
+  .stat .n{font-family:'Fraunces',serif; font-size:1.6rem; color:var(--brass-bright); font-weight:700;}
+  .stat .l{font-size:0.78rem; color:var(--muted);}
+
+  /* mobile nav toggle */
+  .mobile-topbar{display:none;}
+  @media (max-width: 880px){
+    .app{flex-direction:column;}
+    .drawer{
+      position:sticky; top:0; height:auto; width:100%;
+      padding:0; z-index:20;
+      border-right:none; border-bottom:1px solid var(--line);
+    }
+    .drawer-title{display:none;}
+    .mobile-topbar{
+      display:flex; align-items:center; justify-content:space-between;
+      padding:16px 20px; background:var(--ink-2);
+      padding-top:calc(16px + env(safe-area-inset-top,0px));
+    }
+    .mobile-topbar h1{font-size:1.05rem;}
+    nav{
+      display:none;
+      padding:8px 12px 16px 12px;
+    }
+    nav.open{display:block;}
+    main{padding:32px 20px 80px 20px;}
+    .panel > h2{font-size:1.6rem;}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <aside class="drawer">
+    <div class="drawer-title">
+      <div class="kicker">Readings in Philippine History</div>
+      <h1>Midterm Reviewer</h1>
+      <div class="sub">Weeks 2–4 · 50 items · 75 minutes</div>
+    </div>
+    <div class="mobile-topbar">
+      <h1 style="font-size:1.05rem;">RPH Midterm Reviewer</h1>
+      <button class="ghost" style="padding:8px 14px;" id="menuToggle">Menu</button>
+    </div>
+    <nav id="navList">
+      <button class="navbtn active" data-panel="overview"><span class="num">00</span> Exam at a glance</button>
+      <button class="navbtn" data-panel="w21"><span class="num">01</span> Essentials of History</button>
+      <button class="navbtn" data-panel="w22"><span class="num">02</span> Histo-Competencies</button>
+      <button class="navbtn" data-panel="w31"><span class="num">03</span> Sources & Cartography</button>
+      <button class="navbtn" data-panel="w32"><span class="num">04</span> Oral History</button>
+      <button class="navbtn" data-panel="w4"><span class="num">05</span> Local History</button>
+      <button class="navbtn" data-panel="strategy"><span class="num">06</span> Comparisons & Strategy</button>
+      <button class="navbtn" data-panel="cram"><span class="num">07</span> 20-Minute Cram Sheet</button>
+      <button class="navbtn" data-panel="flashcards"><span class="num">08</span> Flashcards</button>
+      <button class="navbtn" data-panel="quiz"><span class="num">09</span> Self-Test Quiz</button>
+    </nav>
+    <div class="progress-wrap">
+      <div class="progress-label"><span>Sections read</span><span id="progressText">0/9</span></div>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    </div>
+  </aside>
+
+  <main>
+
+    <!-- 00 OVERVIEW -->
+    <section class="panel active" id="panel-overview">
+      <h2>What's actually on this exam</h2>
+      <p class="dek">Before the definitions, here's the shape of the test itself: how many items, how they're weighted, and how hard they'll be.</p>
+
+      <div class="stat-row">
+        <div class="stat"><div class="n">50</div><div class="l">total items</div></div>
+        <div class="stat"><div class="n">2 pts</div><div class="l">per item</div></div>
+        <div class="stat"><div class="n">75 min</div><div class="l">time limit</div></div>
+        <div class="stat"><div class="n">5</div><div class="l">major areas</div></div>
+      </div>
+
+      <table class="cov">
+        <tr><th>Week</th><th>Topic</th><th>Items</th><th>Weight</th></tr>
+        <tr><td>2.1</td><td>Essentials of History</td><td>1–10</td><td>20%</td></tr>
+        <tr><td>2.2</td><td>Histo-Competencies</td><td>11–20</td><td>20%</td></tr>
+        <tr><td>3.1</td><td>Sources & Cartography</td><td>21–30</td><td>20%</td></tr>
+        <tr><td>3.2</td><td>Oral History</td><td>31–40</td><td>20%</td></tr>
+        <tr><td>4</td><td>Local History</td><td>41–50</td><td>20%</td></tr>
+        <tr><td colspan="2">Total</td><td>50</td><td>100%</td></tr>
+      </table>
+
+      <div class="block" style="border:none; padding-bottom:0;">
+        <h3>Difficulty mix</h3>
+        <p>The test is designed with <b>25 easy</b>, <b>15 average</b>, and <b>10 difficult</b> items. Easy items usually ask you to recognize a definition. Difficult items ask you to combine two or more concepts inside a workplace scenario — tourism, law, banking, HR, journalism, museums, local government.</p>
+        <div class="keyline"><span class="q">The one idea to hold onto</span>Every topic in this reviewer eventually gets tested through a job scenario. The scenario is a wrapper — what's really being graded is whether you can think historically underneath it.</div>
+      </div>
+    </section>
+
+    <!-- 01 WEEK 2.1 -->
+    <section class="panel" id="panel-w21">
+      <div class="eyebrow-row"><span class="weight-pill">Items 1–10 · 20%</span></div>
+      <h2>Essentials of History</h2>
+      <p class="dek">This section is not about memorizing dates. It's about a way of reading events: what keeps happening, what suddenly breaks, and why both matter.</p>
+
+      <div class="block">
+        <h3>What you're expected to do with history</h3>
+        <p>Instead of just recalling facts, you should be able to:</p>
+        <ul class="ex">
+          <li>Spot <b>patterns</b> across different time periods</li>
+          <li>Spot <b>irregularities</b> — things that break the pattern</li>
+          <li>Understand <b>continuity and change</b> together</li>
+          <li>Apply that thinking to situations happening right now</li>
+          <li>Explain why any of this matters for citizenship and your future job</li>
+        </ul>
+      </div>
+
+      <div class="block">
+        <h3>Historical patterns</h3>
+        <p>A <b>pattern</b> is something that keeps repeating — a structure, behavior, or process that shows up across different periods. Example: colonial powers reusing the same labor-control strategies, or an economic dependency that just changes hands from one administration to the next.</p>
+        <div class="keyline"><span class="q">Ask yourself</span>What keeps happening?</div>
+        <span class="memory-clue">PATTERN = RECURRENCE</span>
+      </div>
+
+      <div class="block">
+        <h3>Historical irregularities (anomalies)</h3>
+        <p>An <b>irregularity</b> is the opposite: an unexpected event that interrupts a pattern that was already in place. A sudden policy reversal, a regulatory shock, an infrastructure failure that comes out of nowhere.</p>
+        <div class="keyline"><span class="q">Ask yourself</span>What suddenly changed?</div>
+        <span class="memory-clue">IRREGULARITY = INTERRUPTION</span>
+      </div>
+
+      <div class="block">
+        <h3>Why you need both, not just one</h3>
+        <p>The average and difficult items reward students who look at pattern <b>and</b> irregularity together, not one or the other.</p>
+        <div class="example-card">
+          <span class="tag">Worked example — the bridge</span>
+          A bridge has run safely for decades, then suddenly collapses. A weak answer only looks at the day it fell. A strong answer:
+          <ol style="margin:10px 0 0 0; padding-left:20px;">
+            <li>Looks at the long-term maintenance pattern</li>
+            <li>Identifies the one unusual event</li>
+            <li>Figures out what caused the rupture</li>
+            <li>Connects the long pattern to the sudden anomaly</li>
+          </ol>
+        </div>
+        <div class="keyline">Historical Analysis = Continuity/Pattern + Change/Irregularity + Context</div>
+      </div>
+
+      <div class="block">
+        <h3>Case in point: GOMBURZA</h3>
+        <p>The exam uses the execution of GOMBURZA to test this exact logic. The point isn't to recall the date — it's to trace the reasoning chain:</p>
+        <div class="example-card">GOMBURZA executions → looks like an isolated, harsh event → but shifts public consciousness → fuels nationalism</div>
+        <p>An event can be limited, sudden, and disruptive in the moment, and <b>still</b> produce long-term consequences. That's the insight to walk in with.</p>
+      </div>
+
+      <div class="block" style="border-bottom:none;">
+        <h3>Why any of this matters for your career</h3>
+        <p>The exam keeps translating historical thinking into workplace skills: contextual decision-making, ethical responsibility, analytical thinking, spotting patterns, spotting anomalies, understanding systems.</p>
+        <div class="keyline"><span class="q">If a question asks "how is history relevant to your profession?"</span>Look for the answer built on context + analysis + evidence + ethics + responsible decision-making — never one that's just about memorizing facts.</div>
+      </div>
+    </section>
+
+    <!-- 02 WEEK 2.2 -->
+    <section class="panel" id="panel-w22">
+      <div class="eyebrow-row"><span class="weight-pill">Items 11–20 · 20%</span></div>
+      <h2>Histo-Competencies</h2>
+      <p class="dek">Five skills the exam expects you to name, explain, and — in the hard questions — use all at once.</p>
+
+      <div class="block">
+        <h3>The five competencies</h3>
+        <table class="cmp">
+          <tr><th>Competency</th><th>Main question</th><th>Keyword</th></tr>
+          <tr><td>Critical Thinking</td><td>Is this interpretation sound?</td><td>QUESTION</td></tr>
+          <tr><td>Information Literacy</td><td>Can this information be verified?</td><td>VERIFY</td></tr>
+          <tr><td>Contextual Analysis</td><td>What were the circumstances of the time?</td><td>CONTEXT</td></tr>
+          <tr><td>Objective Use of Theories</td><td>Am I applying the framework fairly?</td><td>OBJECTIVITY</td></tr>
+          <tr><td>Logical Communication</td><td>Can I clearly demonstrate my conclusion?</td><td>ARGUE</td></tr>
+        </table>
+        <div class="keyline">QUESTION → VERIFY → CONTEXTUALIZE → APPLY FAIRLY → COMMUNICATE</div>
+      </div>
+
+      <div class="block">
+        <h3>1. Critical thinking</h3>
+        <p>Examining information carefully before you accept its conclusion — checking for bias, questioning claims, comparing interpretations instead of jumping to one.</p>
+        <div class="example-card"><span class="tag">Example</span>A colleague presents historical data while clearly favoring one product. Correct move: identify the possible bias before accepting the interpretation.</div>
+        <span class="memory-clue">CRITICAL THINKING = QUESTION</span>
+      </div>
+
+      <div class="block">
+        <h3>2. Information literacy</h3>
+        <p>Finding, evaluating, comparing, and verifying sources — telling reliable information apart from unreliable information.</p>
+        <div class="example-card"><span class="tag">Example</span>A viral historical post has no citation. Correct move: find, evaluate, and compare reliable sources — not share it, not memorize it, not just have an opinion about it.</div>
+        <span class="memory-clue">INFORMATION LITERACY = VERIFY</span>
+      </div>
+
+      <div class="block">
+        <h3>3. Contextual analysis</h3>
+        <p>Understanding an event or document within the conditions of <b>its own time</b>, instead of judging it by today's standards.</p>
+        <div class="example-card"><span class="tag">Example</span>A lawyer reviews Spanish-era land documents. They must avoid reading modern property concepts into a document that comes from a completely different legal and social context.</div>
+        <p><b>Presentism</b> is the trap this skill guards against — judging the past mainly by present-day standards without weighing historical circumstances enough.</p>
+        <span class="memory-clue">CONTEXTUAL ANALYSIS = TIME + SITUATION</span>
+      </div>
+
+      <div class="block">
+        <h3>4. Objective use of theories</h3>
+        <p>Applying a framework fairly, systematically, and consistently — not letting personal beliefs distort the analysis. This does <b>not</b> mean "never criticize anything." It means apply the same standard evenly.</p>
+        <span class="memory-clue">OBJECTIVE THEORIES = FAIR APPLICATION</span>
+      </div>
+
+      <div class="block">
+        <h3>5. Logical communication / research diligence</h3>
+        <p>Finding information isn't the finish line. You need to organize evidence, explain your reasoning, build an argument, and back claims with credible evidence.</p>
+        <span class="memory-clue">LOGICAL COMMUNICATION = EXPLAIN + SUPPORT</span>
+      </div>
+
+      <div class="block">
+        <h3>Putting all five together</h3>
+        <p>Hard questions require integration. Here's the sequence the exam expects when you're handed a contested historical claim:</p>
+        <ol class="step-list">
+          <li><b>Critical thinking</b> — Who's making the claim? What assumptions or interests are behind it?</li>
+          <li><b>Information literacy</b> — What sources support or contradict it?</li>
+          <li><b>Contextual analysis</b> — What historical circumstances produced this claim?</li>
+          <li><b>Objective theory</b> — What appropriate framework can analyze it fairly?</li>
+          <li><b>Logical communication</b> — Present a structured, evidence-based conclusion.</li>
+        </ol>
+        <p>This exact chain shows up in the difficult items about social-media historical distortion and corporate due diligence.</p>
+      </div>
+
+      <div class="block" style="border-bottom:none;">
+        <h3>Case in point: the Tejeros Convention</h3>
+        <p>Used as the application case for all five competencies. When electoral anomalies from 1897 come up, the weak question is "who won?" The strong question the exam rewards is:</p>
+        <div class="keyline">How do we evaluate the evidence and circumstances surrounding the event?</div>
+        <p>That means weighing primary accounts, verifying sources, understanding 1897's electoral framework, comparing competing interpretations, and reaching an evidence-based conclusion — all five competencies at once.</p>
+      </div>
+    </section>
+
+    <!-- 03 WEEK 3.1 -->
+    <section class="panel" id="panel-w31">
+      <div class="eyebrow-row"><span class="weight-pill">Items 21–30 · 20%</span></div>
+      <h2>Sources & Cartography</h2>
+      <p class="dek">How to classify a historical source, trace where an artifact came from, and read the 1734 Murillo Velarde Map as more than just a map.</p>
+
+      <div class="block">
+        <h3>Primary, secondary, and hybrid sources</h3>
+        <table class="cmp">
+          <tr><th>Type</th><th>Main characteristic</th></tr>
+          <tr><td>Primary</td><td>Direct or contemporary evidence — original land grants, cadastral records, firsthand accounts, contemporary photographs</td></tr>
+          <tr><td>Secondary</td><td>A later interpretation or analysis — journal articles, historians' analysis, textbooks</td></tr>
+          <tr><td>Hybrid</td><td>Different layers of evidence or authorship combined in one document</td></tr>
+        </table>
+        <div class="example-card"><span class="tag">Primary example</span>For a Spanish-period land claim, the most direct evidence is the original land grant or colonial cadastral record from that period.</div>
+        <div class="example-card"><span class="tag">Secondary example</span>A modern scholarly article analyzing the 1897 Tejeros Convention is a secondary source — it's an interpretation written well after the fact.</div>
+        <div class="example-card"><span class="tag">Hybrid example</span>A 1942 guerrilla diary that also has later annotations added by a descendant. You don't treat the whole thing as one uniform source — you separate what's original from what was added later.</div>
+      </div>
+
+      <div class="flip-grid">
+        <div class="flip-card"><div class="flip-inner"><div class="flip-face flip-front"><div class="term">Primary</div><div class="hint">tap to reveal</div></div><div class="flip-face flip-back">Direct / contemporary evidence</div></div></div>
+        <div class="flip-card"><div class="flip-inner"><div class="flip-face flip-front"><div class="term">Secondary</div><div class="hint">tap to reveal</div></div><div class="flip-face flip-back">Later interpretation / analysis</div></div></div>
+        <div class="flip-card"><div class="flip-inner"><div class="flip-face flip-front"><div class="term">Hybrid</div><div class="hint">tap to reveal</div></div><div class="flip-face flip-back">Original material + later interpretive additions, kept distinct</div></div></div>
+      </div>
+
+      <div class="block">
+        <h3>Provenance</h3>
+        <p>Provenance is information about an artifact's origin, history, ownership, creation, and documentation. When you're handed an artifact or photograph, ask:</p>
+        <ul class="ex">
+          <li>Who created it, and when?</li>
+          <li>Where did it come from, and who possessed it?</li>
+          <li>Can its history actually be traced?</li>
+          <li>Is the attribution credible?</li>
+        </ul>
+        <p>This matters most in the difficult local-history items about photographs and museum artifacts.</p>
+      </div>
+
+      <div class="block">
+        <h3>The Murillo Velarde Map (1734)</h3>
+        <p>Don't study this as "just a map." The exam wants you to see it as a <b>political instrument</b> — colonial cartography served imperial expansion, administrative control, and territorial claims, not just navigation.</p>
+        <div class="keyline">Maps can be political instruments.</div>
+      </div>
+
+      <div class="block">
+        <h3>Reading the map critically — avoid both extremes</h3>
+        <div class="example-card"><span class="tag">Extreme 1 — wrong</span>"The map is colonial, therefore it's useless."</div>
+        <div class="example-card"><span class="tag">Extreme 2 — also wrong</span>"The map is historical, therefore everything on it is objective truth."</div>
+        <p>The better approach: analyze it critically while still preserving its historical value — look at its colonial purpose, imperial interests, territorial claims, and its marginal illustrations, which can hold evidence of indigenous presence.</p>
+      </div>
+
+      <div class="block" style="border-bottom:none;">
+        <h3>Indigenous representation in the map's margins</h3>
+        <p>Don't automatically privilege only the colonial administrative point of view. The map's marginal illustrations can reveal indigenous livelihoods, cultural practices, social life, and identity — and the exam ties this reading to the principles in <b>CMO No. 2, Series of 2019</b>.</p>
+      </div>
+    </section>
+
+    <!-- 04 WEEK 3.2 -->
+    <section class="panel" id="panel-w32">
+      <div class="eyebrow-row"><span class="weight-pill">Items 31–40 · 20%</span></div>
+      <h2>Oral History</h2>
+      <p class="dek">Centered on the Tinguian narrative of Apobolinayen, and on the line between a meaningful tradition and a verified fact.</p>
+
+      <div class="block">
+        <h3>What oral history actually is</h3>
+        <p>Collecting and analyzing people's remembered experiences, narratives, testimonies, and traditions. It can surface cultural knowledge, social insight, spiritual worldview, community memory, and voices that official records leave out.</p>
+      </div>
+
+      <div class="block">
+        <h3>Apobolinayen</h3>
+        <p>This Tinguian narrative is the exam's main example. It's meant to offer insight into Tinguian identity, worldview, culture, social practices, and cosmology — <b>not</b> to be read as mere entertainment.</p>
+      </div>
+
+      <div class="block">
+        <h3>Oral tradition ≠ automatically historical fact</h3>
+        <p>This is the distinction the exam tests most directly. An oral tradition can be historically valuable <b>without every element being literally true</b>.</p>
+        <div class="example-card"><span class="tag">Example</span>A narrative describes a supernatural or celestial encounter. The correct historical approach: recognize it as folklore or symbolic narrative — not automatically treat it as literal historical fact.</div>
+        <table class="cmp">
+          <tr><th>Category</th><th>What it means</th></tr>
+          <tr><td>Historical fact</td><td>A claim supported through credible evidence and verification</td></tr>
+          <tr><td>Folklore / local mythology</td><td>Narratives with symbolic, supernatural, cultural, or traditional elements</td></tr>
+          <tr><td>Oral history</td><td>Information passed through testimony, memory, experience, and community tradition</td></tr>
+        </table>
+        <div class="keyline">Respect the cultural value of a narrative without automatically declaring every detail historically verified.</div>
+      </div>
+
+      <div class="block">
+        <h3>Triangulation</h3>
+        <p>Comparing information across multiple sources or forms of evidence to strengthen or test a historical claim.</p>
+        <div class="example-card"><span class="tag">Example</span>Elders describe a pre-colonial trade practice. Don't rely on one person's testimony — compare it against oral testimony + historical documentation + anthropology + material evidence.</div>
+        <span class="memory-clue">TRIANGULATION = MULTIPLE EVIDENCE</span>
+      </div>
+
+      <div class="block" style="border-bottom:none;">
+        <h3>Ethical oral history</h3>
+        <p>Research with Indigenous communities has to respect community consent, intellectual property, cultural protocols, community participation, and narrative authority. Researchers do <b>not</b> automatically have the right to record everything, publish everything, reinterpret everything, or turn oral tradition into text without consultation.</p>
+        <div class="keyline">RESPECT + RECORD + VERIFY + CONTEXTUALIZE + CONSENT</div>
+      </div>
+    </section>
+
+    <!-- 05 WEEK 4 -->
+    <section class="panel" id="panel-w4">
+      <div class="eyebrow-row"><span class="weight-pill">Items 41–50 · 20%</span></div>
+      <h2>Local History</h2>
+      <p class="dek">How national history plays out in one specific town, barangay, or community — and how to tell a verified local fact from a nice-sounding legend.</p>
+
+      <div class="block">
+        <h3>What local history is for</h3>
+        <p>It studies a specific town, city, municipality, barangay, or community — but it should never be treated in isolation from national history.</p>
+        <div class="keyline">Local history grounds national history in the experience of particular places.</div>
+        <p>The exam frames local history as showing how national developments were experienced, resisted, adapted, and reshaped locally.</p>
+      </div>
+
+      <div class="block">
+        <h3>Localization</h3>
+        <p>Examining how a broader historical process actually played out in one particular locality.</p>
+        <div class="example-card"><span class="tag">Weak framing</span>"Spanish colonial policies affected the Philippines."</div>
+        <div class="example-card"><span class="tag">Localized framing</span>"How were those policies implemented in this particular town?" — then dig into local institutions, land arrangements, buildings, population, economic activity, resistance, and adaptation.</div>
+      </div>
+
+      <div class="block">
+        <h3>Local etymology / toponymy</h3>
+        <p>Studying where a town or barangay name came from. Never rely on just one story.</p>
+        <div class="keyline">Strong combination: local government records + published local histories + oral interviews.</div>
+        <p>An interesting legend is not automatically an established fact.</p>
+      </div>
+
+      <div class="block">
+        <h3>Handling local legends</h3>
+        <div class="example-card"><span class="tag">Scenario</span>An elder says: "Our barangay was named after a miraculous event."</div>
+        <p>The correct response is neither to accept it immediately nor reject it immediately. Instead: <b>cross-check the explanation against documentary and other available evidence.</b></p>
+      </div>
+
+      <div class="block">
+        <h3>Local heritage</h3>
+        <p>Churches, municipal buildings, ancestral structures, monuments, landscapes, community spaces, photographs, and maps can all carry historical and cultural significance — even without a nationally famous hero attached. These places contribute to community identity.</p>
+      </div>
+
+      <div class="block">
+        <h3>Judging whether an old photo is real</h3>
+        <p>An old-looking photograph is not automatically authentic. Apply three checks:</p>
+        <ol class="step-list">
+          <li><b>Actual</b> — Does it really depict what it claims to depict?</li>
+          <li><b>Authentic</b> — Is it genuinely from the claimed period or source?</li>
+          <li><b>Verified</b> — Can its identification and provenance be supported?</li>
+        </ol>
+        <p>For provenance, look for the source institution, creator or photographer, date, location, original collection, acquisition history, and a traceable repository. A photo without provenance shouldn't be presented as authentic just because it "looks old."</p>
+      </div>
+
+      <div class="block">
+        <h3>Periodization</h3>
+        <p>For deeper local-history analysis, organize development into periods — for example, Spanish colonial → American → contemporary — and trace how administration, land ownership, socioeconomic structures, institutions, settlement, and infrastructure changed across them. The exam favors periodization <b>combined with analysis</b>, not just a list of dates.</p>
+      </div>
+
+      <div class="block" style="border-bottom:none;">
+        <h3>Community storytelling</h3>
+        <p>Community storytelling has real historical value — it preserves memory, recovers marginalized voices, strengthens community identity, and supplements official records. But that doesn't mean every personal memory is automatically accurate. Value participation while keeping source-critical standards.</p>
+      </div>
+    </section>
+
+    <!-- 06 STRATEGY -->
+    <section class="panel" id="panel-strategy">
+      <h2>Comparisons & exam strategy</h2>
+      <p class="dek">The five areas boiled down, plus how to actually approach the hard questions.</p>
+
+      <div class="block">
+        <h3>The Big Five, in one line each</h3>
+        <div class="cram-grid">
+          <div class="cram-card"><h4>1. Historical Thinking</h4><div class="line">Patterns + irregularities + continuity + change</div></div>
+          <div class="cram-card"><h4>2. Histo-Competencies</h4><div class="line">Critical thinking + information literacy + contextual analysis + objective theories + logical communication</div></div>
+          <div class="cram-card"><h4>3. Source Criticism</h4><div class="line">Primary + secondary + hybrid + provenance</div></div>
+          <div class="cram-card"><h4>4. Oral History</h4><div class="line">Respect + triangulation + fact/folklore distinction + consent</div></div>
+          <div class="cram-card"><h4>5. Local History</h4><div class="line">Localization + etymology + heritage + verification + community participation</div></div>
+        </div>
+      </div>
+
+      <div class="block">
+        <h3>High-yield comparisons</h3>
+        <table class="cmp">
+          <tr><th>Pattern</th><th>Irregularity</th></tr>
+          <tr><td>Recurring</td><td>Unexpected</td></tr>
+          <tr><td>Continuity</td><td>Rupture</td></tr>
+          <tr><td>Repeated structure</td><td>Anomaly</td></tr>
+          <tr><td>"What keeps happening?"</td><td>"What suddenly changed?"</td></tr>
+        </table>
+        <table class="cmp">
+          <tr><th>Oral tradition</th><th>Historical fact</th></tr>
+          <tr><td>Culturally meaningful narrative / testimony</td><td>A claim supported through appropriate evidence and verification</td></tr>
+        </table>
+        <table class="cmp">
+          <tr><th>National history</th><th>Local history</th></tr>
+          <tr><td>Broader historical processes</td><td>How those processes operated in a specific place</td></tr>
+        </table>
+      </div>
+
+      <div class="block">
+        <h3>The 5-step process for difficult items</h3>
+        <p>Difficult questions share one trait: the correct answer combines several principles instead of applying just one.</p>
+        <ol class="step-list">
+          <li><b>Identify the historical problem</b> — What is the question actually asking?</li>
+          <li><b>Identify the evidence</b> — What sources or information are given?</li>
+          <li><b>Identify the competency</b> — Critical thinking? Information literacy? Contextual analysis? Objective theory? Logical communication?</li>
+          <li><b>Look for integration</b> — Does the best answer combine more than one approach?</li>
+          <li><b>Reject extreme answers</b> — Be suspicious of choices that accept everything, reject everything, rely on one source, ignore context, invent evidence, prioritize convenience, or confuse legend with fact.</li>
+        </ol>
+      </div>
+
+      <div class="block" style="border-bottom:none;">
+        <h3>What each workplace scenario is really testing</h3>
+        <table class="cmp">
+          <tr><th>Scenario</th><th>Actually testing</th></tr>
+          <tr><td>Tourism</td><td>Historical patterns and source verification</td></tr>
+          <tr><td>Lawyer</td><td>Contextual analysis</td></tr>
+          <tr><td>Journalist</td><td>Information literacy</td></tr>
+          <tr><td>Museum</td><td>Provenance and source criticism</td></tr>
+          <tr><td>Indigenous community</td><td>Oral-history methodology and ethics</td></tr>
+          <tr><td>Local government</td><td>Localization and evidence-based local history</td></tr>
+        </table>
+        <p>The workplace framing is a wrapper around the historical competency actually being graded.</p>
+      </div>
+    </section>
+
+    <!-- 07 CRAM SHEET -->
+    <section class="panel" id="panel-cram">
+      <h2>20-minute cram sheet</h2>
+      <p class="dek">If you only have a few minutes left, read just this page.</p>
+
+      <div class="cram-grid">
+        <div class="cram-card">
+          <h4>Essentials of History</h4>
+          <div class="line"><b>Pattern</b> = recurring structure</div>
+          <div class="line"><b>Irregularity</b> = unexpected deviation</div>
+          <div class="line"><b>Continuity</b> = what persists</div>
+          <div class="line"><b>Change</b> = what transforms</div>
+          <div class="line"><b>Historical thinking</b> = analyze persistence and disruption together</div>
+        </div>
+        <div class="cram-card">
+          <h4>Five Histo-Competencies</h4>
+          <div class="line">Critical Thinking → QUESTION</div>
+          <div class="line">Information Literacy → VERIFY</div>
+          <div class="line">Contextual Analysis → CONTEXTUALIZE</div>
+          <div class="line">Objective Theories → APPLY FAIRLY</div>
+          <div class="line">Logical Communication → EXPLAIN WITH EVIDENCE</div>
+        </div>
+        <div class="cram-card">
+          <h4>Sources</h4>
+          <div class="line"><b>Primary</b> → direct / contemporary</div>
+          <div class="line"><b>Secondary</b> → later interpretation</div>
+          <div class="line"><b>Hybrid</b> → original + later additions</div>
+          <div class="line"><b>Provenance</b> → traceable origin/history of an artifact</div>
+        </div>
+        <div class="cram-card">
+          <h4>Murillo Velarde Map</h4>
+          <div class="line">Not merely a map.</div>
+          <div class="line">Cartography → Power → Administration → Territory → Indigenous representation</div>
+        </div>
+        <div class="cram-card">
+          <h4>Oral History</h4>
+          <div class="line">Apobolinayen: cultural value ≠ automatic factual verification</div>
+          <div class="line">Use: Triangulation + context + respect + consent</div>
+        </div>
+        <div class="cram-card">
+          <h4>Local History</h4>
+          <div class="line"><b>Localization</b> = national/broad processes examined in a particular locality</div>
+          <div class="line">Etymology → Sources → Verification → Heritage → Community</div>
+        </div>
+      </div>
+
+      <div class="final-banner">
+        <h3>The final master concept</h3>
+        <p style="max-width:none;">Good historical thinking doesn't just collect information. It evaluates evidence, understands context, recognizes patterns and changes, respects different forms of historical knowledge, verifies claims, and communicates conclusions responsibly. That's why the exam moves from historical patterns → histo-competencies → sources → oral traditions → local history: each area builds toward actually <i>doing</i> historical analysis, not just understanding it.</p>
+        <div class="aid">THINK → VERIFY → CONTEXTUALIZE → COMPARE → ANALYZE → COMMUNICATE</div>
+      </div>
+    </section>
+
+    <!-- 08 FLASHCARDS -->
+    <section class="panel" id="panel-flashcards">
+      <h2>Flashcards</h2>
+      <p class="dek">Every key term and memory clue from the reviewer in one deck. Tap a card to flip it, or filter to one topic at a time.</p>
+
+      <div class="deck-controls" id="deckFilters">
+        <button class="filter-chip active" data-filter="all">All (22)</button>
+        <button class="filter-chip" data-filter="history">Essentials of History</button>
+        <button class="filter-chip" data-filter="competencies">Histo-Competencies</button>
+        <button class="filter-chip" data-filter="sources">Sources & Cartography</button>
+        <button class="filter-chip" data-filter="oral">Oral History</button>
+        <button class="filter-chip" data-filter="local">Local History</button>
+      </div>
+
+      <div class="flip-grid" id="flashcardDeck"></div>
+    </section>
+
+    <!-- 09 QUIZ -->
+    <section class="panel" id="panel-quiz">
+      <h2>Self-test: can you answer these?</h2>
+      <p class="dek">All 50 items from the exam blueprint, grouped the same way the real test is: 10 questions per topic. Finish a set, then move to the next.</p>
+
+      <div class="set-tabs" id="setTabs"></div>
+
+      <div class="live-score-row">
+        <div class="live-score">This set: <span id="quiz-score">0/10</span></div>
+        <div class="live-score">Overall: <span id="overall-score">0/50</span></div>
+        <div class="live-score-sub" id="liveScoreSub">0 of 10 answered</div>
+      </div>
+
+      <div id="quiz-result-panel">
+        <h3 id="quiz-set-title">Set complete — <span id="quiz-score-2">0/10</span></h3>
+        <p id="quiz-result-msg" style="max-width:none;"></p>
+        <button class="primary" id="nextSetBtn" style="margin-top:10px;">Next set</button>
+      </div>
+
+      <div id="quiz-container"></div>
+
+      <div class="quiz-actions">
+        <button class="ghost" id="resetBtn">Reset this set</button>
+        <button class="ghost" id="resetAllBtn">Reset all 50</button>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+const questionSets = [
+  {
+    title: "Set 1 — Essentials of History",
+    questions: [
+      { q:"A recurring institutional practice across different historical periods is an example of:", options:["Irregularity","Historical pattern","Presentism","Mythology"], correct:1, why:"It repeats across periods — that's the definition of a pattern, not a one-off disruption." },
+      { q:"A sudden event that disrupts an established historical trend is a:", options:["Pattern","Continuity","Irregularity","Secondary source"], correct:2, why:"A sudden break from an established trend is exactly what an irregularity is." },
+      { q:"Which pair of concepts should be examined together for the strongest historical analysis?", options:["Pattern only","Irregularity only","Pattern and irregularity together","Neither"], correct:2, why:"The reviewer stresses that strong analysis looks at both the long-term pattern and the disruption, not just one." },
+      { q:"In the bridge-collapse example, the weakest historical analysis is one that:", options:["Traces the long-term maintenance pattern","Looks only at the day of collapse","Connects pattern with anomaly","Identifies the rupture's cause"], correct:1, why:"Looking only at the moment of collapse ignores the long-term pattern that led up to it." },
+      { q:"The GOMBURZA executions are used in the exam mainly to illustrate:", options:["That memorizing dates is enough","How an isolated event can produce long-term consequences","That colonial administrations were entirely peaceful","A purely local event with no wider effect"], correct:1, why:"A limited, sudden event still shifted consciousness and helped fuel nationalism — that's the reasoning being tested." },
+      { q:"\"Continuity\" in historical thinking refers to:", options:["What suddenly changes","What persists over time","A type of source","A workplace scenario"], correct:1, why:"Continuity is about what stays the same or persists, as opposed to change." },
+      { q:"Which of the following best completes the formula: Historical Analysis = Continuity/Pattern + ___ + Context?", options:["Memorization","Change/Irregularity","Presentism","Folklore"], correct:1, why:"The reviewer's formula pairs continuity/pattern with change/irregularity, framed by context." },
+      { q:"A recurring labor-control strategy appearing under different colonial administrations demonstrates:", options:["An irregularity","A historical pattern","A hybrid source","Triangulation"], correct:1, why:"A strategy that repeats across administrations is a pattern, not a one-time anomaly." },
+      { q:"When a question asks \"how is history relevant to your profession,\" the strongest answer type involves:", options:["Only memorized dates","Context, analysis, evidence, ethics, and responsible decision-making","Personal opinion only","Ignoring historical context"], correct:1, why:"The exam rewards answers built on context, analysis, evidence, and ethics — not memorized facts." },
+      { q:"Applying historical thinking to a sudden regulatory change mainly requires recognizing it as a(n):", options:["Pattern","Irregularity","Secondary source","Presentist judgment"], correct:1, why:"A sudden regulatory change is a textbook example of an irregularity, not a recurring pattern." }
+    ]
+  },
+  {
+    title: "Set 2 — Histo-Competencies",
+    questions: [
+      { q:"A colleague presents historical data while clearly favoring one product. The appropriate response demonstrates:", options:["Objective use of theories","Critical thinking","Local history","Triangulation"], correct:1, why:"Spotting the possible bias before accepting an interpretation is critical thinking." },
+      { q:"Which competency is defined as finding, evaluating, comparing, and verifying sources?", options:["Critical thinking","Information literacy","Contextual analysis","Logical communication"], correct:1, why:"Information literacy is specifically about locating and verifying sources." },
+      { q:"A lawyer avoids applying modern property concepts to a Spanish-era land document. This demonstrates:", options:["Presentism","Contextual analysis","Objective theory","Triangulation"], correct:1, why:"Reading a document within the conditions of its own time is contextual analysis." },
+      { q:"Judging the past primarily by present-day standards without considering historical circumstances is called:", options:["Contextual analysis","Presentism","Localization","Periodization"], correct:1, why:"That's the exact definition of presentism given in the reviewer." },
+      { q:"\"Applying an appropriate framework consistently and fairly, without letting personal bias distort analysis\" describes:", options:["Logical communication","Objective use of theories","Information literacy","Provenance"], correct:1, why:"Fair, consistent application of a framework is the definition of objective use of theories." },
+      { q:"Organizing evidence, explaining reasoning, and supporting claims with credible evidence belongs to which competency?", options:["Critical thinking","Logical communication / research diligence","Contextual analysis","Objective use of theories"], correct:1, why:"This is the definition of logical communication and research diligence." },
+      { q:"When analyzing a contested historical claim, which competency should typically be applied first?", options:["Logical communication","Critical thinking","Objective theory","Contextual analysis"], correct:1, why:"The integrated approach starts with critical thinking — asking who is making the claim and what assumptions are behind it." },
+      { q:"The Tejeros Convention is used in the exam mainly to test:", options:["Memorizing who won the election","Integrated use of all five histo-competencies","Cartography skills","Local etymology"], correct:1, why:"Tejeros is the reviewer's application case for combining all five competencies at once." },
+      { q:"The strongest question to ask about the Tejeros Convention is:", options:["\"Who won?\"","\"How do we evaluate the evidence and circumstances surrounding the event?\"","\"What is the town named after?\"","\"Is this a primary or secondary source only?\""], correct:1, why:"The reviewer explicitly favors evaluating evidence and circumstances over a simple \"who won\" question." },
+      { q:"Which is NOT one of the five histo-competencies?", options:["Critical thinking","Information literacy","Periodization","Logical communication"], correct:2, why:"Periodization belongs to the local history section, not the five histo-competencies." }
+    ]
+  },
+  {
+    title: "Set 3 — Sources & Cartography",
+    questions: [
+      { q:"The most direct evidence for a Spanish-period land claim would be:", options:["A modern textbook","An original land grant or colonial cadastral record","A viral social media post","A folk legend"], correct:1, why:"Original grants and cadastral records are contemporary, direct evidence — that makes them primary sources." },
+      { q:"A modern scholarly article analyzing the 1897 Tejeros Convention is classified as:", options:["Primary","Secondary","Hybrid","Oral"], correct:1, why:"It's a later interpretation written well after the event, which makes it secondary." },
+      { q:"A 1942 guerrilla diary containing later annotations by a descendant is best classified as:", options:["Pure primary","Pure secondary","Hybrid","Unusable"], correct:2, why:"It mixes original wartime writing with later interpretive additions — the layers must be told apart, making it hybrid." },
+      { q:"Provenance refers to:", options:["The literary style of a document","Information about an item's origin, ownership, and documentation history","The map's decorative border","A type of oral tradition"], correct:1, why:"Provenance is about origin, ownership, creation, and traceable history." },
+      { q:"The 1734 Murillo Velarde Map should be understood as:", options:["Only a navigational tool","A politically significant instrument of colonial cartography","An artistic object with no historical value","Completely unreliable and unusable"], correct:1, why:"The reviewer frames it as a political instrument tied to imperial expansion and territorial claims, not just navigation." },
+      { q:"Which extreme should a strong historian avoid when reading the Murillo Velarde Map?", options:["Treating it as entirely useless because it's colonial","Treating it as either entirely useless because it's colonial, or completely objective truth because it's historical","Ignoring cartography entirely","Only focusing on indigenous illustrations"], correct:1, why:"The reviewer names both extremes as wrong — dismissing it outright and treating it as fully objective." },
+      { q:"The map's marginal illustrations are significant because they may reveal:", options:["Only administrative boundaries","Indigenous livelihoods, cultural practices, and identity","Modern property lines","Nothing of historical value"], correct:1, why:"The illustrations can carry evidence of indigenous presence and daily life, beyond the colonial administrative view." },
+      { q:"The exam connects the reading of indigenous representation in maps to:", options:["CMO No. 2, Series of 2019","A random modern law","Local etymology only","Triangulation only"], correct:0, why:"The reviewer explicitly ties this reading approach to CMO No. 2, Series of 2019." },
+      { q:"A historical photograph combined with modern metadata added later is an example of a:", options:["Primary source","Secondary source","Hybrid source","Folklore source"], correct:2, why:"It combines an original item with later added information, which is the hallmark of a hybrid source." },
+      { q:"Which of the following is a secondary source?", options:["An original colonial land grant","A firsthand contemporary account","A history textbook's analysis","A colonial cadastral record"], correct:2, why:"A textbook's analysis is a later interpretation, unlike the other three which are direct, contemporary evidence." }
+    ]
+  },
+  {
+    title: "Set 4 — Oral History",
+    questions: [
+      { q:"Oral history is best defined as:", options:["Only entertainment narratives","Collecting and analyzing remembered experiences, narratives, testimonies, and traditions","A type of colonial map","A form of periodization"], correct:1, why:"That's the reviewer's core definition of oral history." },
+      { q:"The Tinguian narrative of Apobolinayen is used in the exam to illustrate insights into:", options:["Tinguian identity, worldview, and culture","Spanish colonial administration","Cartography","Local government records"], correct:0, why:"Apobolinayen is framed as a window into Tinguian identity, worldview, culture, and cosmology." },
+      { q:"Supernatural or celestial encounters in an oral narrative should be treated as:", options:["Automatically literal historical fact","Folklore or symbolic narrative, while still respecting cultural significance","Completely worthless information","Evidence that should be deleted from the record"], correct:1, why:"The reviewer treats such elements as folklore/symbolism, not literal fact — without dismissing their cultural value." },
+      { q:"A historical fact, as distinguished in this reviewer, is:", options:["Any story told by an elder","A claim supported through credible evidence and verification","The same thing as folklore","Always transmitted orally"], correct:1, why:"Historical fact requires credible evidence and verification, unlike folklore or unverified oral testimony." },
+      { q:"If elders describe a pre-colonial trade practice, the strongest research approach is to:", options:["Rely on one elder's testimony alone","Triangulate with other oral testimony, documents, anthropology, and material evidence","Reject the testimony immediately","Treat it as officially verified without checking"], correct:1, why:"Triangulating across multiple kinds of evidence is the stronger methodology the reviewer identifies." },
+      { q:"Triangulation in oral history research means:", options:["Using only written documents","Comparing information from multiple sources or forms of evidence","Recording without consent","Ignoring community input"], correct:1, why:"Triangulation is defined as comparing multiple sources or forms of evidence to test a claim." },
+      { q:"Ethical oral history research requires respecting all of the following EXCEPT:", options:["Community consent","Cultural protocols","Automatically publishing all recorded material without consultation","Narrative authority of the community"], correct:2, why:"The reviewer explicitly says researchers do NOT automatically have the right to publish everything without consultation." },
+      { q:"Which best completes the oral history formula: RESPECT + RECORD + VERIFY + CONTEXTUALIZE + ___?", options:["CONSENT","PRESENTISM","PERIODIZATION","LOCALIZATION"], correct:0, why:"The reviewer's oral history formula ends with CONSENT." },
+      { q:"Treating an oral tradition as automatically identical to verified historical fact is a mistake because:", options:["Oral traditions have no cultural value","Oral traditions can be culturally meaningful without every detail being literally factual","All oral traditions are false","Written sources are always more reliable"], correct:1, why:"The reviewer stresses that cultural value doesn't require every detail to be literally true." },
+      { q:"Converting an Indigenous community's oral tradition into a written publication without consultation violates:", options:["Objective use of theories","Ethical research standards involving consent and cultural protocols","Triangulation","Periodization"], correct:1, why:"Doing this bypasses community consent and cultural protocols, which the reviewer identifies as an ethical violation." }
+    ]
+  },
+  {
+    title: "Set 5 — Local History",
+    questions: [
+      { q:"Local history is best understood as:", options:["Completely separate from national history","How national historical processes were experienced, resisted, adapted, and reshaped in a specific place","Only about famous national heroes","A type of oral tradition only"], correct:1, why:"Local history grounds national history in the experience of a particular place, according to the reviewer." },
+      { q:"Localization means:", options:["Ignoring national historical processes","Examining how a broader historical process operated in a particular locality","Replacing national history entirely","Only studying maps"], correct:1, why:"Localization asks how a broader process, like colonial policy, actually played out in one specific place." },
+      { q:"When researching the origin of a barangay's name, the strongest approach combines:", options:["Social media posts only","Local government records, published local histories, and oral interviews","One elder's story only","Guesswork"], correct:1, why:"This three-part combination is the research-diligence standard the reviewer names." },
+      { q:"An elder claims a barangay was named after a miraculous event. The correct response is to:", options:["Accept it immediately","Reject it immediately","Cross-check the explanation against documentary and other available evidence","Publish it as fact without verification"], correct:2, why:"The reviewer rejects both immediate acceptance and immediate rejection in favor of cross-checking." },
+      { q:"Local heritage sites gain significance mainly because:", options:["They must be linked to a nationally famous hero","They can contribute to community identity even without a nationally famous figure","They are always older than 500 years","They must appear on a colonial map"], correct:1, why:"The reviewer states local places can hold significance and shape community identity without a famous hero attached." },
+      { q:"Before treating an old photograph as authentic, historians should check whether it is:", options:["Colorful, rare, and expensive","Actual, authentic, and verified","Popular on social media","Owned by a museum only"], correct:1, why:"Actual, authentic, and verified is the exact three-part standard the reviewer gives for photographs." },
+      { q:"A photograph lacking provenance should be treated as:", options:["Automatically authentic because it looks old","Not automatically authentic, since its history can't be confirmed","Completely worthless","Impossible to ever verify"], correct:1, why:"Without traceable provenance, an old-looking photo shouldn't be presented as authentic just because of its appearance." },
+      { q:"Periodization in local history is most useful when it:", options:["Simply lists dates without analysis","Is combined with analysis of changes in administration, land ownership, and institutions across periods","Ignores the American period","Focuses only on the Spanish period"], correct:1, why:"The reviewer favors periodization paired with analysis, not just a list of dates." },
+      { q:"Community storytelling contributes to local history mainly by:", options:["Replacing the need for verification","Preserving memory, recovering marginalized voices, and supplementing official records","Being automatically 100% accurate","Being irrelevant to historical research"], correct:1, why:"Community storytelling adds real value in these ways, though it still needs source-critical checking." },
+      { q:"The strongest overall approach to local etymology, heritage, and community memory is to:", options:["Accept every legend as fact","Reject all oral or community-based information","Value community participation while still applying source-critical verification","Rely solely on colonial records"], correct:2, why:"The reviewer consistently pairs respect for community sources with the need to verify them." }
+    ]
+  }
+];
+
+const quizContainer = document.getElementById('quiz-container');
+const setTabsEl = document.getElementById('setTabs');
+let currentSet = 0;
+const answers = questionSets.map(s => new Array(s.questions.length).fill(null));
+
+function renderSetTabs(){
+  setTabsEl.innerHTML = '';
+  questionSets.forEach((s, i) => {
+    const done = answers[i].every(a => a !== null);
+    const btn = document.createElement('button');
+    btn.className = 'set-tab' + (i === currentSet ? ' active' : '') + (done ? ' done' : '');
+    btn.innerHTML = '<span class="dot"></span> Set ' + (i+1);
+    btn.addEventListener('click', () => { currentSet = i; renderAll(); });
+    setTabsEl.appendChild(btn);
+  });
+}
+
+function overallScore(){
+  let total = 0;
+  answers.forEach((setAns, i) => {
+    setAns.forEach((a, j) => { if (a === questionSets[i].questions[j].correct) total++; });
+  });
+  return total;
+}
+
+function renderQuestions(){
+  quizContainer.innerHTML = '';
+  const set = questionSets[currentSet];
+  set.questions.forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'quiz-item';
+    div.dataset.index = i;
+    const chosen = answers[currentSet][i];
+    let optsHtml = item.options.map((opt, j) => {
+      let cls = 'opt';
+      if (chosen !== null) {
+        cls += ' locked';
+        if (j === item.correct) cls += ' correct';
+        else if (j === chosen) cls += ' incorrect';
+      }
+      return '<label class="' + cls + '" data-opt="' + j + '">' +
+        '<input type="radio" name="q' + i + '" value="' + j + '" ' + (chosen !== null ? 'disabled' : '') + ' ' + (chosen === j ? 'checked' : '') + '>' +
+        '<span>' + opt + '</span></label>';
+    }).join('');
+    let fbHtml = '';
+    if (chosen !== null) {
+      const right = chosen === item.correct;
+      fbHtml = '<div class="feedback show ' + (right ? 'right' : 'wrong') + '">' +
+        (right ? 'Correct. ' : 'Not quite — the correct answer is "' + item.options[item.correct] + '." ') +
+        item.why + '</div>';
+    } else {
+      fbHtml = '<div class="feedback" id="fb-' + i + '"></div>';
+    }
+    div.innerHTML =
+      '<div class="qnum">Question ' + (i+1) + ' of ' + set.questions.length + '</div>' +
+      '<div class="qtext">' + item.q + '</div>' +
+      optsHtml + fbHtml;
+    quizContainer.appendChild(div);
+  });
+}
+
+function updateScorePanel(){
+  const setAns = answers[currentSet];
+  const answeredCount = setAns.filter(a => a !== null).length;
+  const setScore = setAns.filter((a,i) => a === questionSets[currentSet].questions[i].correct).length;
+  document.getElementById('quiz-score').textContent = setScore + '/' + setAns.length;
+  document.getElementById('overall-score').textContent = overallScore() + '/50';
+  document.getElementById('liveScoreSub').textContent = answeredCount + ' of ' + setAns.length + ' answered in this set';
+
+  const resultPanel = document.getElementById('quiz-result-panel');
+  if (answeredCount === setAns.length) {
+    document.getElementById('quiz-set-title').innerHTML = questionSets[currentSet].title + ' complete — <span id="quiz-score-2">' + setScore + '/' + setAns.length + '</span>';
+    const msg = document.getElementById('quiz-result-msg');
+    if (setScore === setAns.length) msg.textContent = "Perfect set. Move on to the next one.";
+    else if (setScore >= 7) msg.textContent = "Solid. Revisit the section behind the ones you missed before moving on.";
+    else msg.textContent = "Worth another pass through this section before you continue.";
+    resultPanel.classList.add('show');
+    document.getElementById('nextSetBtn').style.display = currentSet < questionSets.length - 1 ? 'inline-block' : 'none';
+  } else {
+    resultPanel.classList.remove('show');
+  }
+}
+
+function renderAll(){
+  renderSetTabs();
+  renderQuestions();
+  updateScorePanel();
+}
+
+quizContainer.addEventListener('change', (e) => {
+  if (e.target.type !== 'radio') return;
+  const itemDiv = e.target.closest('.quiz-item');
+  const i = parseInt(itemDiv.dataset.index);
+  const val = parseInt(e.target.value);
+  answers[currentSet][i] = val;
+  renderAll();
+});
+
+document.getElementById('nextSetBtn').addEventListener('click', () => {
+  if (currentSet < questionSets.length - 1) {
+    currentSet++;
+    renderAll();
+    window.scrollTo({top:0, behavior:'instant'});
+  }
+});
+
+document.getElementById('resetBtn').addEventListener('click', () => {
+  answers[currentSet].fill(null);
+  renderAll();
+});
+
+document.getElementById('resetAllBtn').addEventListener('click', () => {
+  answers.forEach(a => a.fill(null));
+  currentSet = 0;
+  renderAll();
+});
+
+renderAll();
+
+
+// Flip cards (static ones already in the page, e.g. Sources section)
+document.querySelectorAll('.flip-card').forEach(card => {
+  card.addEventListener('click', () => card.classList.toggle('flipped'));
+});
+
+// ---- Flashcard deck ----
+const flashcards = [
+  { cat:"history", term:"Historical pattern", back:"A recurring structure, behavior, or process that appears across different periods. PATTERN = RECURRENCE." },
+  { cat:"history", term:"Historical irregularity", back:"An unexpected event or deviation that interrupts an established pattern. IRREGULARITY = INTERRUPTION." },
+  { cat:"history", term:"Historical Analysis formula", back:"Continuity/Pattern + Change/Irregularity + Context." },
+  { cat:"history", term:"GOMBURZA's lesson", back:"A limited, sudden, disruptive event can still produce long-term consequences — it shifted consciousness and fed nationalism." },
+  { cat:"competencies", term:"Critical Thinking", back:"Examining information carefully before accepting a conclusion — checking bias, questioning claims. CRITICAL THINKING = QUESTION." },
+  { cat:"competencies", term:"Information Literacy", back:"Finding, evaluating, comparing, and verifying sources. INFORMATION LITERACY = VERIFY." },
+  { cat:"competencies", term:"Contextual Analysis", back:"Understanding an event or document within the conditions of its own time. CONTEXTUAL ANALYSIS = TIME + SITUATION." },
+  { cat:"competencies", term:"Presentism", back:"Judging the past mainly by present-day standards without sufficiently considering historical circumstances." },
+  { cat:"competencies", term:"Objective Use of Theories", back:"Applying a framework fairly, systematically, and consistently — not \"never criticize,\" but apply the same standard evenly." },
+  { cat:"competencies", term:"Logical Communication", back:"Organizing evidence, explaining reasoning, and supporting claims with credible evidence. = EXPLAIN + SUPPORT." },
+  { cat:"sources", term:"Primary source", back:"Direct or contemporary evidence — original land grants, cadastral records, firsthand accounts." },
+  { cat:"sources", term:"Secondary source", back:"A later interpretation or analysis — journal articles, historians' analysis, textbooks." },
+  { cat:"sources", term:"Hybrid source", back:"A document with different layers of evidence or authorship — separate what's original from what was added later." },
+  { cat:"sources", term:"Provenance", back:"Information about an item's origin, history, ownership, creation, and documentation — who, when, where, and is it traceable." },
+  { cat:"sources", term:"Murillo Velarde Map", back:"The 1734 map — more than navigation. A political instrument tied to imperial expansion, administrative control, and territorial claims." },
+  { cat:"oral", term:"Apobolinayen", back:"A Tinguian narrative used to reveal identity, worldview, culture, and cosmology — not meant as mere entertainment." },
+  { cat:"oral", term:"Oral tradition vs. fact", back:"A tradition can be historically valuable without every element being literally factual — e.g. supernatural elements are folklore, not literal fact." },
+  { cat:"oral", term:"Triangulation", back:"Comparing multiple sources or forms of evidence to strengthen or test a claim. TRIANGULATION = MULTIPLE EVIDENCE." },
+  { cat:"oral", term:"Ethical oral history", back:"Respect community consent, intellectual property, cultural protocols, and narrative authority. RESPECT + RECORD + VERIFY + CONTEXTUALIZE + CONSENT." },
+  { cat:"local", term:"Localization", back:"Examining how a broader historical process operated in one particular locality, not just stating that it \"affected the Philippines.\"" },
+  { cat:"local", term:"Local etymology", back:"Never rely on one story for a name's origin. Combine local government records + published local histories + oral interviews." },
+  { cat:"local", term:"Actual · Authentic · Verified", back:"The standard for judging an old photograph: does it show what it claims, is it genuinely from that period, and can its provenance be supported?" }
+];
+
+const deckEl = document.getElementById('flashcardDeck');
+function renderDeck(filter){
+  deckEl.innerHTML = '';
+  flashcards
+    .filter(c => filter === 'all' || c.cat === filter)
+    .forEach(c => {
+      const card = document.createElement('div');
+      card.className = 'flip-card big';
+      card.innerHTML = `
+        <div class="flip-inner">
+          <div class="flip-face flip-front"><div class="term">${c.term}</div><div class="hint">tap to reveal</div></div>
+          <div class="flip-face flip-back">${c.back}</div>
+        </div>`;
+      card.addEventListener('click', () => card.classList.toggle('flipped'));
+      deckEl.appendChild(card);
+    });
+}
+renderDeck('all');
+
+document.querySelectorAll('#deckFilters .filter-chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    document.querySelectorAll('#deckFilters .filter-chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    renderDeck(chip.dataset.filter);
+  });
+});
+
+// Navigation
+const navBtns = document.querySelectorAll('.navbtn');
+const panels = document.querySelectorAll('.panel');
+const visited = new Set(['overview']);
+const totalSections = navBtns.length;
+
+function updateProgress(){
+  document.getElementById('progressText').textContent = visited.size + '/' + totalSections;
+  document.getElementById('progressFill').style.width = (visited.size/totalSections*100) + '%';
+}
+updateProgress();
+
+navBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    const target = btn.dataset.panel;
+    navBtns.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    panels.forEach(p => p.classList.remove('active'));
+    document.getElementById('panel-' + target).classList.add('active');
+    visited.add(target);
+    updateProgress();
+    window.scrollTo({top:0, behavior:'instant'});
+    const nav = document.getElementById('navList');
+    if (window.innerWidth <= 880) nav.classList.remove('open');
+  });
+});
+
+document.getElementById('menuToggle').addEventListener('click', () => {
+  document.getElementById('navList').classList.toggle('open');
+});
+</script>
+</body>
+</html>
